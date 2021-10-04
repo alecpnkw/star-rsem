@@ -1,0 +1,69 @@
+import pandas as pd 
+configfile: "config/config.yaml"
+samples = pd.read_csv(config["samples"], sep = '\t').set_index("sample", drop=False)
+
+rule all:
+    input:
+        expand("results/featureCounts/{sample}_{genome}.featureCounts", sample=samples.index, genome=config["genomes"])
+
+#genome index...
+rule star_index:
+    input:
+        fasta = "resources/{genome}.fasta"
+    output:
+        directory("results/star/index/{genome}")
+    message:
+        "Building STAR index..."
+    threads:
+        1
+    params:
+        extra = ""
+    log:
+        "logs/star_index_{genome}.log"
+    wrapper:
+        "0.78.0/bio/star/index"
+
+#star aligner... 
+rule star_pe_multi:
+    input:
+        # use a list for multiple fastq files for one sample
+        # usually technical replicates across lanes/flowcells
+        "results/star/index/{genome}",
+        fq1 = ["illumina/{sample}/{sample}_S1_R1_001.fastq.gz", "illumina/{sample}/{sample}_S1_R2_001.fastq.gz"]
+    output:
+        # see STAR manual for additional output files
+        "results/star/pe/{sample}_{genome}/Aligned.out.bam"
+    log:
+        "logs/star/pe/{sample}_{genome}.log"
+    params:
+        # path to STAR reference genome index
+        index="results/star/index/{genome}",
+        # optional parameters
+        extra="--outSAMtype BAM Unsorted"
+    threads: config["threads"]
+    wrapper:
+        "0.78.0/bio/star/align"
+
+#transcript count...
+rule feature_counts:
+    input:
+        sam="results/star/pe/{sample}_{genome}/Aligned.out.bam", # list of sam or bam files
+        annotation="resources/{genome}.gtf",
+        # optional input
+        # chr_names="",           # implicitly sets the -A flag
+        # fasta="genome.fasta"      # implicitly sets the -G flag
+    output:
+        multiext("results/featureCounts/{sample}_{genome}",
+                 ".featureCounts",
+                 ".featureCounts.summary",
+                 ".featureCounts.jcounts")
+    threads:
+        config["threads"]
+    params:
+        tmp_dir="",   # implicitly sets the --tmpDir flag
+        r_path="",    # implicitly sets the --Rpath flag
+        extra="-O --fracOverlap 0.2"
+    log:
+        "logs/featureCounts/{sample}_{genome}.log"
+    wrapper:
+        "0.72.0/bio/subread/featurecounts"
