@@ -1,1 +1,3 @@
-# STAR-featureCounts
+# STAR-RSEM
+
+Work in progress.

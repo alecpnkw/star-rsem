@@ -1,0 +1,2 @@
+sample	condition	R1_fastq	R2_fastq
+sample1	condition1	illumina/sample1/sample1_S1_R1_001.fastq.gz	illumina/sample1/sample1_S1_R2_001.fastq.gz

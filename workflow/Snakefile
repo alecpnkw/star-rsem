@@ -1,15 +1,18 @@
 import pandas as pd 
+from os.path import dirname, basename
 configfile: "config/config.yaml"
+
+# Todo: add schema validation to config, samples files...
 samples = pd.read_csv(config["samples"], sep = '\t').set_index("sample", drop=False)
 
 rule all:
     input:
-        expand("results/featureCounts/{sample}_{genome}.featureCounts", sample=samples.index, genome=config["genomes"])
+        expand("results/rsem/{sample}_{genome}/test-output.txt", sample=samples.index, genome = config["genome"]["build"])
 
-#genome index...
 rule star_index:
     input:
-        fasta = "resources/{genome}.fasta"
+        fasta = config["genome"]["fasta"],
+        gtf = config["genome"]["annotation"]
     output:
         directory("results/star/index/{genome}")
     message:
@@ -17,53 +20,99 @@ rule star_index:
     threads:
         1
     params:
-        extra = ""
+        output_prefix = lambda wc, output: output[0]
     log:
-        "logs/star_index_{genome}.log"
-    wrapper:
-        "0.78.0/bio/star/index"
+        "logs/star-index/{genome}.log"
+    conda:
+        "envs/star.yaml"
+    envmodules:
+        "star/2.7.9a"
+    shell:
+        """
+        STAR --runMode genomeGenerate \
+        --genomeDir {output} \
+        --genomeFastaFiles {input.fasta} \
+        --sjdbGTFfile {input.gtf} \ 
+        --runThreadN {threads} \ 
+        --outFileNamePrefix {params.output_prefix}
+        """
 
-#star aligner... 
-rule star_pe_multi:
+rule star_pe_single:
     input:
-        # use a list for multiple fastq files for one sample
-        # usually technical replicates across lanes/flowcells
-        "results/star/index/{genome}",
-        fq1 = ["illumina/{sample}/{sample}_S1_R1_001.fastq.gz", "illumina/{sample}/{sample}_S1_R2_001.fastq.gz"]
+        genome = "results/star/index/{genome}",
+        R1 = lambda wc: samples.loc[wc.sample, "R1_fastq"], # directs to fastq files
+        R2 = lambda wc: samples.loc[wc.sample, "R2_fastq"]
     output:
         # see STAR manual for additional output files
-        "results/star/pe/{sample}_{genome}/Aligned.out.bam"
-    log:
-        "logs/star/pe/{sample}_{genome}.log"
+        "results/star-pe/{sample}_{genome}/Aligned.out.bam",
+        "results/star-pe/{sample}_{genome}/toTranscriptome.out.bam"
     params:
-        # path to STAR reference genome index
-        index="results/star/index/{genome}",
-        # optional parameters
-        extra="--outSAMtype BAM Unsorted"
-    threads: config["threads"]
-    wrapper:
-        "0.78.0/bio/star/align"
+        prefix = "results/star-pe/{sample}_{genome}/"
+    log:
+        "logs/star-pe/{sample}_{genome}.log"
+    threads: 16
+    conda: 
+        "envs/star.yaml"
+    envmodules:
+        "star/2.7.9a"
+    shell:
+        """
+        STAR \
+		--genomeDir {input.genome} \
+		--readFilesIn {input.R1} {input.R2} \
+		--readFilesCommand zcat \
+		--outFileNamePrefix {params.prefix} \
+		--runThreadN {threads} \
+		--quantMode TranscriptomeSAM GeneCounts \
+		--outSAMtype BAM SortedByCoordinate
+        """
 
-#transcript count...
-rule feature_counts:
+rule rsem_prepare_reference:
     input:
-        sam="results/star/pe/{sample}_{genome}/Aligned.out.bam", # list of sam or bam files
-        annotation="resources/{genome}.gtf",
-        # optional input
-        # chr_names="",           # implicitly sets the -A flag
-        # fasta="genome.fasta"      # implicitly sets the -G flag
+        fasta = config["genome"]["fasta"],
+        gtf = config["genome"]["annotation"]
     output:
-        multiext("results/featureCounts/{sample}_{genome}",
-                 ".featureCounts",
-                 ".featureCounts.summary",
-                 ".featureCounts.jcounts")
+        "results/rsem-index/{genome}"
     threads:
-        config["threads"]
+        8
+    conda: 
+        "envs/rsem.yaml" # Todo: generate this env!
+    envmodules:
+        "rsem/1.3.3"
+    shell:
+        """
+        rsem-prepare-reference \
+        --gtf {input.gtf} \
+        --num-threads {threads} \
+        {input.fasta} \
+        {output}
+        """
+
+rule rsem_calculate_expression:
+    input:
+        genome = "results/rsem-index/{genome}",
+        transcripts = "results/star-pe/{sample}_{genome}/toTranscriptome.out.bam" # check this path! 
+    output:
+        "results/rsem/{sample}_{genome}/test-output.txt"
     params:
-        tmp_dir="",   # implicitly sets the --tmpDir flag
-        r_path="",    # implicitly sets the --Rpath flag
-        extra="-O --fracOverlap 0.2"
+        output_prefix = lambda wc, output: dirname(output[0])
     log:
-        "logs/featureCounts/{sample}_{genome}.log"
-    wrapper:
-        "0.72.0/bio/subread/featurecounts"
+        "logs/rsem/{sample}_{genome}.log"
+    threads:
+        8 
+    conda:
+        "envs/rsem.yaml" # Todo: generate this env!
+    envmodules:
+        "rsem/1.3.3"
+    shell:
+        """
+        rsem-calculate-expression \
+        --alignments \
+        --strandedness none|forward|reverse \
+        --paired-end \
+        --num-threads num_threads \
+        {input.transcripts} \
+        {input.genome} \
+        {params.output_prefix} &> {log}
+        """
+    
