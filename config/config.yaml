@@ -3,4 +3,3 @@ genome:
   build: "hg38" # id for the genome
   fasta: "resources/hg38.fasta" # path to genome .fasta
   annotation: "resources/hg38.gtf" # path to transcripts.gtf
-threads: 4

@@ -18,7 +18,7 @@ rule star_index:
     message:
         "Building STAR index..."
     threads:
-        1
+        24
     params:
         output_prefix = lambda wc, output: output[0]
     log:
@@ -45,7 +45,7 @@ rule star_pe_single:
     output:
         # see STAR manual for additional output files
         "results/star-pe/{sample}_{genome}/Aligned.out.bam",
-        "results/star-pe/{sample}_{genome}/toTranscriptome.out.bam"
+        "results/star-pe/{sample}_{genome}/toTranscriptome.out.bam" # Check!
     params:
         prefix = "results/star-pe/{sample}_{genome}/"
     log:
@@ -93,7 +93,7 @@ rule rsem_calculate_expression:
         genome = "results/rsem-index/{genome}",
         transcripts = "results/star-pe/{sample}_{genome}/toTranscriptome.out.bam" # check this path! 
     output:
-        "results/rsem/{sample}_{genome}/test-output.txt"
+        "results/rsem/{sample}_{genome}/test-output.txt" # Todo: figure out what output RSEM generates! 
     params:
         output_prefix = lambda wc, output: dirname(output[0])
     log:
