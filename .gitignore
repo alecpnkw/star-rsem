@@ -1,0 +1,17 @@
+*
+!.gitignore
+!config/
+!config/config.yaml
+!config/samples.tsv
+!illumina/
+!illumina/.gitignore
+!resources/
+!resources/.gitignore
+!results/
+!results/.gitignore
+!workflow/
+!workflow/envs/
+!workflow/envs/*
+!workflow/Snakefile
+!README.md
+!lsf.yaml
