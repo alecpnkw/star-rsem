@@ -1,0 +1,24 @@
+__default__:
+  - "-P acc_PBG"
+  - "-W 01:00"
+  - "-n 1"
+  - "-R rusage[mem=3000]"
+  - "-R span[hosts=1]"
+
+star_index:
+  - "-W 02:00"
+  - "-n 12"
+  - "-R rusage[mem=5000]"
+
+star_pe_single:
+  - "-n 8"
+  - "-W 02:00"
+
+rsem_prepare_reference:
+  - "-n 8"
+  - "-W 02:00"
+
+rsem_calculate_expression:
+  - "-n 4"
+  - "-W 02:00"
+
