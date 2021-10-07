@@ -7,7 +7,7 @@ samples = pd.read_csv(config["samples"], sep = '\t').set_index("sample", drop=Fa
 
 rule all:
     input:
-        expand("results/rsem/{sample}_{genome}/test-output.txt", sample=samples.index, genome = config["genome"]["build"])
+        expand("results/star-pe/{sample}_{genome}/Aligned.toTranscriptome.out.bam", sample=samples.index, genome = config["genome"]["build"])
 
 rule star_index:
     input:
@@ -17,12 +17,7 @@ rule star_index:
         directory("results/star/index/{genome}")
     message:
         "Building STAR index..."
-    threads:
-        24
-    params:
-        output_prefix = lambda wc, output: output[0]
-    log:
-        "logs/star-index/{genome}.log"
+    threads: 12
     conda:
         "envs/star.yaml"
     envmodules:
@@ -32,9 +27,7 @@ rule star_index:
         STAR --runMode genomeGenerate \
         --genomeDir {output} \
         --genomeFastaFiles {input.fasta} \
-        --sjdbGTFfile {input.gtf} \ 
-        --runThreadN {threads} \ 
-        --outFileNamePrefix {params.output_prefix}
+        --sjdbGTFfile {input.gtf}
         """
 
 rule star_pe_single:
@@ -44,13 +37,15 @@ rule star_pe_single:
         R2 = lambda wc: samples.loc[wc.sample, "R2_fastq"]
     output:
         # see STAR manual for additional output files
-        "results/star-pe/{sample}_{genome}/Aligned.out.bam",
-        "results/star-pe/{sample}_{genome}/toTranscriptome.out.bam" # Check!
+        "results/star-pe/{sample}_{genome}/Aligned.sortedByCoord.out.bam",
+        "results/star-pe/{sample}_{genome}/Aligned.toTranscriptome.out.bam",
+        "results/star-pe/{sample}_{genome}/SJ.out.tab"
+    threads: 8
     params:
-        prefix = "results/star-pe/{sample}_{genome}/"
+        prefix = "results/star-pe/{sample}_{genome}/",
+        threads = 16
     log:
         "logs/star-pe/{sample}_{genome}.log"
-    threads: 16
     conda: 
         "envs/star.yaml"
     envmodules:
@@ -62,7 +57,7 @@ rule star_pe_single:
 		--readFilesIn {input.R1} {input.R2} \
 		--readFilesCommand zcat \
 		--outFileNamePrefix {params.prefix} \
-		--runThreadN {threads} \
+		--runThreadN {params.threads} \
 		--quantMode TranscriptomeSAM GeneCounts \
 		--outSAMtype BAM SortedByCoordinate
         """
@@ -76,7 +71,7 @@ rule rsem_prepare_reference:
     threads:
         8
     conda: 
-        "envs/rsem.yaml" # Todo: generate this env!
+        "envs/rsem.yaml"
     envmodules:
         "rsem/1.3.3"
     shell:
@@ -91,7 +86,7 @@ rule rsem_prepare_reference:
 rule rsem_calculate_expression:
     input:
         genome = "results/rsem-index/{genome}",
-        transcripts = "results/star-pe/{sample}_{genome}/toTranscriptome.out.bam" # check this path! 
+        transcripts = "results/star-pe/{sample}_{genome}/toTranscriptome.out.bam"
     output:
         "results/rsem/{sample}_{genome}/test-output.txt" # Todo: figure out what output RSEM generates! 
     params:
@@ -101,7 +96,7 @@ rule rsem_calculate_expression:
     threads:
         8 
     conda:
-        "envs/rsem.yaml" # Todo: generate this env!
+        "envs/rsem.yaml"
     envmodules:
         "rsem/1.3.3"
     shell:

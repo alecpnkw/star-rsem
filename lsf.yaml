@@ -2,13 +2,13 @@ __default__:
   - "-P acc_PBG"
   - "-W 01:00"
   - "-n 1"
-  - "-R rusage[mem=3000]"
+  - "-R rusage[mem=4000]"
   - "-R span[hosts=1]"
 
 star_index:
-  - "-W 02:00"
-  - "-n 12"
-  - "-R rusage[mem=5000]"
+  - "-W 06:00"
+  - "-q premium"
+  - "-R rusage[mem=8000]"
 
 star_pe_single:
   - "-n 8"
