@@ -8,17 +8,16 @@ __default__:
 star_index:
   - "-W 06:00"
   - "-q premium"
-  - "-R rusage[mem=8000]"
+  - "-R rusage[mem=5000]"
 
 star_pe_single:
-  - "-n 8"
   - "-W 02:00"
+  - "-R rusage[mem=5000]"
 
 rsem_prepare_reference:
-  - "-n 8"
-  - "-W 02:00"
+  - "-W 06:00"
+  - "-R rusage[mem=5000]"
 
 rsem_calculate_expression:
-  - "-n 4"
-  - "-W 02:00"
-
+  - "-W 06:00"
+  - "-R rusage[mem=5000]"

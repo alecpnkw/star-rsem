@@ -17,7 +17,7 @@ rule star_index:
         directory("results/star/index/{genome}")
     message:
         "Building STAR index..."
-    threads: 12
+    threads: 16
     conda:
         "envs/star.yaml"
     envmodules:
@@ -40,12 +40,10 @@ rule star_pe_single:
         "results/star-pe/{sample}_{genome}/Aligned.sortedByCoord.out.bam",
         "results/star-pe/{sample}_{genome}/Aligned.toTranscriptome.out.bam",
         "results/star-pe/{sample}_{genome}/SJ.out.tab"
-    threads: 8
+    threads: 12
     params:
         prefix = "results/star-pe/{sample}_{genome}/",
-        threads = 16
-    log:
-        "logs/star-pe/{sample}_{genome}.log"
+        threads = 24
     conda: 
         "envs/star.yaml"
     envmodules:
@@ -67,47 +65,50 @@ rule rsem_prepare_reference:
         fasta = config["genome"]["fasta"],
         gtf = config["genome"]["annotation"]
     output:
-        "results/rsem-index/{genome}"
+        "results/rsem-index/{genome}/{genome}.idx.fa"
+    params:
+        prefix = lambda wc, output: dirname(output[0]) + "/{0}".format(wc.genome)
     threads:
         8
     conda: 
         "envs/rsem.yaml"
     envmodules:
-        "rsem/1.3.3"
+        "rsem/1.3.0"
     shell:
         """
         rsem-prepare-reference \
         --gtf {input.gtf} \
         --num-threads {threads} \
         {input.fasta} \
-        {output}
+        {params.prefix}
         """
 
 rule rsem_calculate_expression:
     input:
-        genome = "results/rsem-index/{genome}",
+        genome = "results/rsem-index/{genome}/{genome}.idx.fa",
         transcripts = "results/star-pe/{sample}_{genome}/Aligned.toTranscriptome.out.bam"
     output:
         "results/rsem/{sample}_{genome}/{sample}_{genome}.isoforms.results" # Todo: figure out what output RSEM generates! 
     params:
-        output_prefix = lambda wc, output: dirname(output[0]) + "/{0}_{1}".format(wc.sample, wc.genome)
-    log:
-        "logs/rsem/{sample}_{genome}.log"
+        output_prefix = lambda wc, output: dirname(output[0]) + "/{0}_{1}".format(wc.sample, wc.genome),
+        genome_prefix = "results/rsem-index/{genome}/{genome}", # Todo: make match input
+        threads = 16
     threads:
         8 
     conda:
         "envs/rsem.yaml"
     envmodules:
-        "rsem/1.3.3"
+        "rsem/1.3.0"
     shell:
         """
         rsem-calculate-expression \
         --alignments \
-        --strandedness none|forward|reverse \
+        --strandedness none \
         --paired-end \
-        --num-threads num_threads \
+        --num-threads {params.threads} \
         {input.transcripts} \
-        {input.genome} \
-        {params.output_prefix} &> {log}
+        {params.genome_prefix} \
+        {params.output_prefix}
         """
+        # Check strandedness of library, perhaps push to config!
     
