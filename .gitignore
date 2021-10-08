@@ -3,8 +3,6 @@
 !config/
 !config/config.yaml
 !config/samples.tsv
-!illumina/
-!illumina/.gitignore
 !resources/
 !resources/.gitignore
 !results/
