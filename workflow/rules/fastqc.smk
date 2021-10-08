@@ -15,4 +15,4 @@ rule fastqc:
         "logs/fastqc/{sample}_{read}.log"
     threads: 1
     wrapper:
-        "0.78.0/bio/fastqc"
+        "0.78.0/bio/fastqc" # use wrapper for handling of fnames
