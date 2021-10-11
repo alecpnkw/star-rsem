@@ -9,7 +9,7 @@ rule rsem_prepare_reference:
     threads:
         8
     conda: 
-        "envs/rsem.yaml"
+        "../envs/rsem.yaml"
     envmodules:
         "rsem/1.3.0"
     shell:
@@ -29,7 +29,7 @@ rule rsem_calculate_expression:
         "results/rsem/{sample}_{genome}/{sample}_{genome}.isoforms.results"
     params:
         output_prefix = lambda wc, output: dirname(output[0]) + "/{0}_{1}".format(wc.sample, wc.genome),
-        genome_prefix = lambda wc, input: splitext(input["genome"])[0],
+        genome_prefix = lambda wc, input: dirname(input["genome"]) + "/" + basename(input["genome"]).split('.')[0],
         threads = 16
     threads:
         8 
@@ -41,7 +41,7 @@ rule rsem_calculate_expression:
         """
         rsem-calculate-expression \
         --alignments \
-        --strandedness none \
+        --strandedness reverse \
         --paired-end \
         --num-threads {params.threads} \
         {input.transcripts} \

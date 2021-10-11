@@ -8,7 +8,7 @@ rule star_index:
         "Building STAR index..."
     threads: 16
     conda:
-        "envs/star.yaml"
+        "../envs/star.yaml"
     envmodules:
         "star/2.7.9a"
     shell:

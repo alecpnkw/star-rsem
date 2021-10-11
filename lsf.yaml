@@ -21,3 +21,11 @@ rsem_prepare_reference:
 rsem_calculate_expression:
   - "-W 06:00"
   - "-R rusage[mem=5000]"
+
+fastqc:
+  - "-R rusage[mem=4000]"
+  - "-W 01:00"
+
+multiqc: 
+  - "-R rusage[mem=3000]"
+  - "-W 00:30"
