@@ -1,5 +1,5 @@
 import pandas as pd 
-from os.path import dirname, basename, splitext
+from os.path import dirname, basename
 configfile: "config/config.yaml"
 
 # Todo: add schema validation to config, samples files...
