@@ -11,7 +11,7 @@ star_index:
   - "-R rusage[mem=5000]"
 
 star_pe_single:
-  - "-W 02:00"
+  - "-W 06:00"
   - "-R rusage[mem=5000]"
 
 rsem_prepare_reference:
@@ -19,8 +19,9 @@ rsem_prepare_reference:
   - "-R rusage[mem=5000]"
 
 rsem_calculate_expression:
-  - "-W 06:00"
-  - "-R rusage[mem=5000]"
+  - "-W 12:00"
+  - "-q premium"
+  - "-R rusage[mem=15000]"
 
 fastqc:
   - "-R rusage[mem=4000]"

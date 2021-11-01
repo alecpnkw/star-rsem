@@ -12,6 +12,8 @@
 !workflow/envs/*
 !workflow/rules/
 !workflow/rules/*
+!workflow/scripts/
+!workflow/scripts/*
 !workflow/Snakefile
 !README.md
 !lsf.yaml

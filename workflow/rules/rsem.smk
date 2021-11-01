@@ -26,13 +26,15 @@ rule rsem_calculate_expression:
         genome = "results/rsem-index/{genome}/{genome}.idx.fa",
         transcripts = "results/star-pe/{sample}_{genome}/Aligned.toTranscriptome.out.bam"
     output:
-        "results/rsem/{sample}_{genome}/{sample}_{genome}.isoforms.results"
+        multiext("results/rsem/{sample}_{genome}/{sample}_{genome}", ".isoforms.results", ".genes.results", ".transcript.bam")
     params:
         output_prefix = lambda wc, output: dirname(output[0]) + "/{0}_{1}".format(wc.sample, wc.genome),
-        genome_prefix = lambda wc, input: dirname(input["genome"]) + "/" + basename(input["genome"]).split('.')[0],
+        genome_prefix = lambda wc, input: dirname(input["genome"]) + "/" + ".".join(basename(input["genome"]).split('.')[:-2]),
         threads = 16
     threads:
-        8 
+        8
+    resources:
+        mem_mb = 15000 
     conda:
         "envs/rsem.yaml"
     envmodules:
