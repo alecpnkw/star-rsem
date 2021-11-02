@@ -3,7 +3,7 @@ rule star_index:
         fasta = config["genome"]["fasta"],
         gtf = config["genome"]["annotation"]
     output:
-        directory("results/star/index/{genome}")
+        directory("results/star-index/{genome}")
     message:
         "Building STAR index..."
     threads: 16
@@ -21,7 +21,7 @@ rule star_index:
 
 rule star_pe_single:
     input:
-        genome = "results/star/index/{genome}",
+        genome = "results/star-index/{genome}",
         R1 = lambda wc: samples.loc[wc.sample, "R1_fastq"], # directs to fastq files
         R2 = lambda wc: samples.loc[wc.sample, "R2_fastq"]
     output:
