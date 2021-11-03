@@ -33,8 +33,10 @@ rule star_pe_single:
     params:
         prefix = "results/star-pe/{sample}_{genome}/",
         threads = 24
-    conda: 
-        "envs/star.yaml"
+    resources:
+        mem_mb = 5000
+    #conda: 
+    #    "envs/star.yaml"
     envmodules:
         "star/2.7.9a"
     shell:
