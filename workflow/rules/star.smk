@@ -3,12 +3,12 @@ rule star_index:
         fasta = config["genome"]["fasta"],
         gtf = config["genome"]["annotation"]
     output:
-        directory("results/star/index/{genome}")
+        directory("results/star-index/{genome}")
     message:
         "Building STAR index..."
     threads: 16
-    conda:
-        "../envs/star.yaml"
+    #conda:
+    #    "../envs/star.yaml"
     envmodules:
         "star/2.7.9a"
     shell:
@@ -21,7 +21,7 @@ rule star_index:
 
 rule star_pe_single:
     input:
-        genome = "results/star/index/{genome}",
+        genome = "results/star-index/{genome}",
         R1 = lambda wc: samples.loc[wc.sample, "R1_fastq"], # directs to fastq files
         R2 = lambda wc: samples.loc[wc.sample, "R2_fastq"]
     output:
@@ -33,10 +33,8 @@ rule star_pe_single:
     params:
         prefix = "results/star-pe/{sample}_{genome}/",
         threads = 24
-    resources:
-        mem_mb = 5000
     #conda: 
-    #    "envs/star.yaml"
+     #   "../envs/star.yaml"
     envmodules:
         "star/2.7.9a"
     shell:
