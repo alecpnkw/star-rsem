@@ -7,8 +7,8 @@ rule star_index:
     message:
         "Building STAR index..."
     threads: 16
-    conda:
-        "../envs/star.yaml"
+    #conda:
+    #    "../envs/star.yaml"
     envmodules:
         "star/2.7.9a"
     shell:
@@ -33,8 +33,8 @@ rule star_pe_single:
     params:
         prefix = "results/star-pe/{sample}_{genome}/",
         threads = 24
-    conda: 
-        "envs/star.yaml"
+    #conda: 
+     #   "../envs/star.yaml"
     envmodules:
         "star/2.7.9a"
     shell:
