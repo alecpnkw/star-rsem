@@ -32,7 +32,8 @@ rule star_pe_single:
     threads: 12
     params:
         prefix = "results/star-pe/{sample}_{genome}/",
-        threads = 24
+        threads = 24,
+        addtl_opts = ""
     resources:
         mem_mb = 5000
     #conda: 
@@ -48,5 +49,5 @@ rule star_pe_single:
 		--outFileNamePrefix {params.prefix} \
 		--runThreadN {params.threads} \
 		--quantMode TranscriptomeSAM GeneCounts \
-		--outSAMtype BAM SortedByCoordinate
+		--outSAMtype BAM SortedByCoordinate {params.addtl_opts}
         """   

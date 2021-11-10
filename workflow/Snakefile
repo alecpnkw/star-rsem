@@ -1,5 +1,7 @@
+from snakemake.utils import min_version
 import pandas as pd 
 from os.path import dirname, basename
+min_version("6.0")
 configfile: "config/config.yaml"
 
 # Todo: add schema validation to config, samples files...
