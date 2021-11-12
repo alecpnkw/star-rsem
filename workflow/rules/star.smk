@@ -28,7 +28,8 @@ rule star_pe_single:
         # see STAR manual for additional output files
         "results/star-pe/{sample}_{genome}/Aligned.sortedByCoord.out.bam",
         "results/star-pe/{sample}_{genome}/Aligned.toTranscriptome.out.bam",
-        "results/star-pe/{sample}_{genome}/SJ.out.tab"
+        "results/star-pe/{sample}_{genome}/SJ.out.tab",
+	"results/star-pe/{sample}_{genome}/ReadsPerGene.out.tab"
     threads: 10
     params:
         prefix = "results/star-pe/{sample}_{genome}/",
