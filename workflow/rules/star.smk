@@ -33,7 +33,7 @@ rule star_pe_single:
     params:
         prefix = "results/star-pe/{sample}_{genome}/",
         threads = 24,
-        addtl_opts = ""
+        addtl_opts = "--readFilesCommand zcat"
     resources:
         mem_mb = 5000
     #conda: 
@@ -45,7 +45,6 @@ rule star_pe_single:
         STAR \
 		--genomeDir {input.genome} \
 		--readFilesIn {input.R1} {input.R2} \
-		--readFilesCommand zcat \
 		--outFileNamePrefix {params.prefix} \
 		--runThreadN {params.threads} \
 		--quantMode TranscriptomeSAM GeneCounts \
