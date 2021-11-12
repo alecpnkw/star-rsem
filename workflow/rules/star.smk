@@ -29,13 +29,13 @@ rule star_pe_single:
         "results/star-pe/{sample}_{genome}/Aligned.sortedByCoord.out.bam",
         "results/star-pe/{sample}_{genome}/Aligned.toTranscriptome.out.bam",
         "results/star-pe/{sample}_{genome}/SJ.out.tab"
-    threads: 12
+    threads: 10
     params:
         prefix = "results/star-pe/{sample}_{genome}/",
         threads = 24,
         addtl_opts = "--readFilesCommand zcat"
     resources:
-        mem_mb = 5000
+        mem_mb = 4000
     #conda: 
      #   "../envs/star.yaml"
     envmodules:
