@@ -9,7 +9,7 @@ counts = pd.DataFrame({
 for (i,fhandle) in enumerate(snakemake.input):
     new_counts = pd.read_table(fhandle, sep = '\t')
     new_counts.loc[:, 'sample'] = snakemake.params['samples'][i]
-    new_counts = new_counts[:, counts.colums]
+    new_counts = new_counts.loc[:, counts.columns]
     counts = pd.concat([counts, new_counts])
 
 #pivot

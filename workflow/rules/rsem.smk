@@ -64,7 +64,7 @@ rule gather_rsem_transcripts:
         value = "expected_count",
         key = "transcript_id"
     script:
-        "scripts/gather-rsem.py"
+        "../scripts/gather-rsem.py"
 
 rule gather_rsem_genes:
     input:
@@ -78,5 +78,5 @@ rule gather_rsem_genes:
         value = "expected_count",
         key = "gene_id"
     script:
-        "scripts/gather-rsem.py"
+        "../scripts/gather-rsem.py"
                 

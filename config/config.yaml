@@ -1,5 +1,5 @@
 samples: "config/samples.tsv"
 genome:
-  build: "hg38" # id for the genome
-  fasta: "resources/hg38.fasta" # path to genome .fasta
-  annotation: "resources/hg38.gtf" # path to transcripts.gtf
+  build: "GRCh38" # id for the genome
+  fasta: "../resources/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa" # path to genome .fasta
+  annotation: "../resources/Homo_sapiens.GRCh38.104.gtf" # path to transcripts.gtf
