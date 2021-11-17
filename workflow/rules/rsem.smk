@@ -51,4 +51,32 @@ rule rsem_calculate_expression:
         {params.output_prefix}
         """
         # Check strandedness of library, perhaps push to config!
-        
+
+rule gather_rsem_transcripts:
+    input:
+        expand("results/rsem/{sample}_{{genome}}/{sample}_{{genome}}.isoforms.results", 
+        sample=samples.index
+        )
+    output:
+        "results/rsem-combined/rsem_transcript_{genome}.tsv"
+    params:
+        samples = samples.index,
+        value = "expected_count",
+        key = "transcript_id"
+    script:
+        "scripts/gather-rsem.py"
+
+rule gather_rsem_genes:
+    input:
+        expand("results/rsem/{sample}_{{genome}}/{sample}_{{genome}}.genes.results", 
+        sample=samples.index
+        )
+    output:
+        "results/rsem-combined/rsem_gene_{genome}.tsv"
+    params:
+        samples = samples.index,
+        value = "expected_count",
+        key = "gene_id"
+    script:
+        "scripts/gather-rsem.py"
+                
