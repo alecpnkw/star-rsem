@@ -11,6 +11,10 @@ This workflow automates the following steps:
 - Paired-end alignment with [STAR](https://github.com/alexdobin/STAR)
 - Gene and transcript quantification with [RSEM](https://github.com/deweylab/RSEM)
 
+### Rulegraph
+
+<img src="rulegraph.png" alt="rulegraph" style="width: 40%; display: block; margin: 0 auto;">
+
 ## Usage
 
 1. Clone this repository.
@@ -22,7 +26,10 @@ This workflow automates the following steps:
    ```bash
    snakemake --dry-run
    ```
-5. Execute the workflow 
+5. Execute the workflow (submitting over lsf on HPC, other options are available)
+   ```bash
+   snakemake --use-envmodules --profile lsf --jobs 6
+   ```
 
 ## Configuration
 
