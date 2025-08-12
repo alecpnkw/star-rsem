@@ -2,10 +2,10 @@ from snakemake.utils import min_version
 import pandas as pd 
 from os.path import dirname, basename
 min_version("6.0")
-configfile: "config/config_UM.yaml"
+configfile: "config/config.yaml"
 
 # Todo: add schema validation to config, samples files...
-samples = pd.read_csv(config["samples"], sep = '\t').set_index("sample", drop=False)
+samples = pd.read_csv(config["samples"], sep = ' ').set_index("sample", drop=False)
 
 rule all:
     input:
