@@ -3,6 +3,7 @@ import pandas as pd
 from os.path import dirname, basename
 min_version("6.0")
 configfile: "config/config.yaml"
+localrules: all, multiqc
 
 # Todo: add schema validation to config, samples files...
 samples = pd.read_csv(config["samples"], sep = ' ').set_index("sample", drop=False)
