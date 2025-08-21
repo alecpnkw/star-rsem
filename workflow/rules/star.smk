@@ -7,8 +7,8 @@ rule star_index:
     message:
         "Building STAR index..."
     threads: 16
-    #conda:
-    #    "../envs/star.yaml"
+    conda:
+        "../envs/star.yaml"
     envmodules:
         "star/2.7.9a"
     resources:
@@ -41,8 +41,8 @@ rule star_pe_single:
     resources:
         mem_mb = 16000
         walltime = 360
-    #conda: 
-     #   "../envs/star.yaml"
+    conda: 
+        "../envs/star.yaml"
     envmodules:
         "star/2.7.9a"
     shell:

@@ -1,4 +1,3 @@
  snakemake \
---use-envmodules \
---profile lsf \
+--use-conda \
 --jobs 6

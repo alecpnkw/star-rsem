@@ -8,8 +8,8 @@ rule rsem_prepare_reference:
         prefix = lambda wc, output: dirname(output[0]) + "/{0}".format(wc.genome)
     threads:
         8
-    #conda: 
-    #    "../envs/rsem.yaml"
+    conda: 
+        "../envs/rsem.yaml"
     envmodules:
         "rsem/1.3.0"
     resources:
@@ -39,8 +39,8 @@ rule rsem_calculate_expression:
     resources:
         walltime = 720
         mem_mb = 16000 
-    #conda:
-    #    "envs/rsem.yaml"
+    conda:
+        "envs/rsem.yaml"
     envmodules:
         "rsem/1.3.0"
     shell:

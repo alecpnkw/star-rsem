@@ -14,8 +14,8 @@ rule fastqc:
     params: "--quiet"
     log:
         "logs/fastqc/{sample}_{read}.log"
-    #conda:
-    #    "../envs/fastqc.yaml"
+    conda:
+        "../envs/fastqc.yaml"
     envmodules:
         "fastqc/0.11.8"
     threads: 1
