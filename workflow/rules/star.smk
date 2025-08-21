@@ -11,6 +11,9 @@ rule star_index:
     #    "../envs/star.yaml"
     envmodules:
         "star/2.7.9a"
+    resources:
+        walltime = 360
+        mem_mb = 60000
     shell:
         """
         STAR --runMode genomeGenerate \
@@ -36,7 +39,8 @@ rule star_pe_single:
         threads = 24,
         addtl_opts = "--readFilesCommand zcat"
     resources:
-        mem_mb = 4000
+        mem_mb = 16000
+        walltime = 360
     #conda: 
      #   "../envs/star.yaml"
     envmodules:

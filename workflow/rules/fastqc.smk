@@ -19,5 +19,8 @@ rule fastqc:
     envmodules:
         "fastqc/0.11.8"
     threads: 1
+    resources:
+        walltime = 60
+        mem_mb = 4000
     script:
         "../scripts/fastqc-wrapper.py"

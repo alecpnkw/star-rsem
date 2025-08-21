@@ -1,4 +1,4 @@
-samples: "config/samples.tsv"
+samples: "config/samples.txt"
 genome:
   build: "GRCh38" # id for the genome
   fasta: "../resources/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa" # path to genome .fasta

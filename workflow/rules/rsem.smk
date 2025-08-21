@@ -12,6 +12,9 @@ rule rsem_prepare_reference:
     #    "../envs/rsem.yaml"
     envmodules:
         "rsem/1.3.0"
+    resources:
+        walltime = 360
+        mem_mb = 16000
     shell:
         """
         rsem-prepare-reference \
@@ -34,7 +37,8 @@ rule rsem_calculate_expression:
     threads:
         8
     resources:
-        mem_mb = 15000 
+        walltime = 720
+        mem_mb = 16000 
     #conda:
     #    "envs/rsem.yaml"
     envmodules:
@@ -63,6 +67,9 @@ rule gather_rsem_transcripts:
         samples = samples.index,
         value = "expected_count",
         key = "transcript_id"
+    resources:
+        walltime = 30
+        mem_mb = 5000
     script:
         "../scripts/gather-rsem.py"
 
@@ -77,6 +84,9 @@ rule gather_rsem_genes:
         samples = samples.index,
         value = "expected_count",
         key = "gene_id"
+    resources:
+        walltime = 30
+        mem_mb = 5000
     script:
         "../scripts/gather-rsem.py"
                 
