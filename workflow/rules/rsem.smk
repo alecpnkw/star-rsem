@@ -85,7 +85,7 @@ rule gather_rsem_genes:
         value = "expected_count",
         key = "gene_id"
     resources:
-        walltime = 30
+        walltime = 30,
         mem_mb = 5000
     script:
         "../scripts/gather-rsem.py"
