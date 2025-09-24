@@ -89,4 +89,3 @@ rule gather_rsem_genes:
         mem_mb = 5000
     script:
         "../scripts/gather-rsem.py"
-                

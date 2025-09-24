@@ -1,5 +1,5 @@
 samples: "config/samples.txt"
 genome:
-  build: "GRCh38" # id for the genome
-  fasta: "../resources/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa" # path to genome .fasta
-  annotation: "../resources/Homo_sapiens.GRCh38.104.gtf" # path to transcripts.gtf
+  build: "GRCh38-2020-A" # id for the genome
+  fasta: "/hpc/packages/minerva-centos7/cellranger/5.0.1/refdata-cellranger/refdata-gex-GRCh38-2020-A/fasta/genome.fa" # path to genome .fasta
+  annotation: "/hpc/packages/minerva-centos7/cellranger/5.0.1/refdata-cellranger/refdata-gex-GRCh38-2020-A/genes/genes.gtf" # path to transcripts.gtf

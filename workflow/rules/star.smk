@@ -32,7 +32,7 @@ rule star_pe_single:
         "results/star-pe/{sample}_{genome}/Aligned.sortedByCoord.out.bam",
         "results/star-pe/{sample}_{genome}/Aligned.toTranscriptome.out.bam",
         "results/star-pe/{sample}_{genome}/SJ.out.tab",
-	"results/star-pe/{sample}_{genome}/ReadsPerGene.out.tab"
+        "results/star-pe/{sample}_{genome}/ReadsPerGene.out.tab"
     threads: 10
     params:
         prefix = "results/star-pe/{sample}_{genome}/",
@@ -48,10 +48,10 @@ rule star_pe_single:
     shell:
         """
         STAR \
-		--genomeDir {input.genome} \
-		--readFilesIn {input.R1} {input.R2} \
-		--outFileNamePrefix {params.prefix} \
-		--runThreadN {params.threads} \
-		--quantMode TranscriptomeSAM GeneCounts \
-		--outSAMtype BAM SortedByCoordinate {params.addtl_opts}
+        --genomeDir {input.genome} \
+        --readFilesIn {input.R1} {input.R2} \
+        --outFileNamePrefix {params.prefix} \
+        --runThreadN {params.threads} \
+        --quantMode TranscriptomeSAM GeneCounts \
+        --outSAMtype BAM SortedByCoordinate {params.addtl_opts}
         """   
