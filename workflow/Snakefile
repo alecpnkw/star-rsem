@@ -8,7 +8,7 @@ localrules: all, multiqc
 
 # Todo: add schema validation to config, samples files...
 # Expect space-delimited samples.txt with columns: SampleID Condition Replicate
-samples = pd.read_csv(config["samples"], sep=' ', header=0).set_index("SampleID", drop=False)
+samples = pd.read_csv(config["samples"], sep=' ', header=0).set_index("sample", drop=False)
 
 # targeting rule
 rule all:
