@@ -14,14 +14,14 @@ samples = pd.read_csv(config["samples"], sep=' ', header=0).set_index("SampleID"
 rule all:
     input:
         expand(["results/rsem-combined/rsem_transcript_{genome}.tsv",
-        "results/rsem-combined/rsem_gene_{genome}.tsv"], genome = config["genome"]["build"]),
+        "results/rsem-combined/rsem_gene_{genome}.tsv"], genome = config["genome"]),
         expand("results/fastqc/{sample}_{read}.html", sample=samples.index, read = ["R1", "R2"]),
         "results/multiqc/multiqc-report.html"
 
 # including last rule here... 
 rule multiqc:
     input:
-        expand("results/rsem/{sample}_{genome}/{sample}_{genome}.isoforms.results", sample=samples.index, genome = config["genome"]["build"]),
+        expand("results/rsem/{sample}_{genome}/{sample}_{genome}.isoforms.results", sample=samples.index, genome = config["genome"]),
         expand("results/fastqc/{sample}_{read}.html", sample=samples.index, read = ["R1", "R2"])
     output:
         "results/multiqc/multiqc-report.html"

@@ -1,7 +1,7 @@
 rule rsem_prepare_reference:
     input:
-        fasta = config["genome"]["fasta"],
-        gtf = config["genome"]["annotation"]
+        fasta = config["reference"],
+        gtf = config["annotation"]
     output:
         "results/rsem-index/{genome}/{genome}.idx.fa"
     params:
