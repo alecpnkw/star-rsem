@@ -40,7 +40,7 @@ rule rsem_calculate_expression:
         walltime = 720,
         mem_mb = 16000 
     conda:
-        "envs/rsem.yaml"
+        "../envs/rsem.yaml"
     envmodules:
         "rsem/1.3.0"
     shell:
